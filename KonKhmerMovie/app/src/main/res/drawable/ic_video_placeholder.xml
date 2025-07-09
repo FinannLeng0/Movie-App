@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="100dp"
+    android:height="100dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <!-- Background rectangle -->
+    <path
+        android:fillColor="#333333"
+        android:pathData="M0,0h100v100h-100z" />
+
+    <!-- Play triangle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M40,30 L70,50 L40,70 Z" />
+</vector>

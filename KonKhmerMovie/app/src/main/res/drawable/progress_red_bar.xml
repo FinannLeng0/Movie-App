@@ -1,0 +1,21 @@
+<!-- res/drawable/progress_red_bar.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Background track -->
+    <item android:id="@android:id/background">
+        <shape>
+            <corners android:radius="2dp"/>
+            <solid android:color="#eeeeee" />
+        </shape>
+    </item>
+
+    <!-- Progress fill -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <corners android:radius="2dp"/>
+                <solid android:color="#FF0000" /> <!-- red color -->
+            </shape>
+        </clip>
+    </item>
+</layer-list>

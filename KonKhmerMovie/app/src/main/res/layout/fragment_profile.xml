@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Back button at top left -->
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/circle_background"
+        android:scaleType="centerInside"
+        android:contentDescription="Back"
+        android:src="@drawable/ic_back_arrow"
+        android:elevation="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:tint="@android:color/white" />
+
+    <!-- Video background filling the whole screen -->
+    <com.example.konkhmermovie.home.ScaledVideoView
+        android:id="@+id/videoBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Dark overlay to dim the video -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000" /> <!-- 50% black overlay -->
+
+    <!-- Overlay: ScrollView with content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:background="@android:color/transparent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:padding="24dp">
+
+                <ImageView
+                    android:id="@+id/profilePlaceholder"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:src="@drawable/ic_profile"
+                    android:contentDescription="Profile Placeholder"
+                    android:layout_marginBottom="24dp"
+                    app:tint="@color/ic_launcher_background" />
+
+                <TextView
+                    android:id="@+id/textNotLoggedIn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="You are not logged in"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/textPleaseLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Please log in to access your profile and enjoy."
+                    android:textColor="#BBBBBB"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    android:layout_marginBottom="36dp"
+                    android:lineSpacingExtra="4dp" />
+
+                <Button
+                    android:id="@+id/btnSignUp"
+                    android:layout_width="200dp"
+                    android:layout_height="48dp"
+                    android:text="@string/sign_up"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/white"
+                    android:backgroundTint="@color/holo_blue_dark"
+                    android:elevation="4dp"
+                    android:drawableStart="@drawable/ic_login"
+                    android:drawablePadding="8dp" />
+            </LinearLayout>
+        </FrameLayout>
+    </ScrollView>
+</FrameLayout>

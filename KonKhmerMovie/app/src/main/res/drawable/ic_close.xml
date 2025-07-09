@@ -1,0 +1,26 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="100dp"
+    android:height="100dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <!-- Top-left becomes Top-right -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M85,15 H65 V20 H80 V35 H85 Z" />
+
+    <!-- Top-right becomes Top-left -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M15,15 H35 V20 H20 V35 H15 Z" />
+
+    <!-- Bottom-left becomes Bottom-right -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M85,85 H65 V80 H80 V65 H85 Z" />
+
+    <!-- Bottom-right becomes Bottom-left -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M15,85 H35 V80 H20 V65 H15 Z" />
+</vector>

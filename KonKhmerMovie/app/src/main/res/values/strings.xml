@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">KonKhmer Movie</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="default_web_client_id">448091503119-0q2q9u583j3qltojhn72l8s2uj9ubdm5.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">1749907345707189</string>
+    <string name="close_fullscreen" />
+</resources>

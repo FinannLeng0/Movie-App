@@ -1,0 +1,77 @@
+<resources>
+    <style name="CategoryButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="strokeColor">@android:color/white</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="cornerRadius">50dp</item>
+        <item name="android:backgroundTint">@android:color/transparent</item>
+        <item name="rippleColor">@android:color/transparent</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="iconTint">@android:color/white</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+    <style name="ShapeAppearance.BottomRounded" parent="ShapeAppearance.Material3.Corner.None">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeBottomLeft">20dp</item>
+        <item name="cornerSizeBottomRight">20dp</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeTopRight">0dp</item>
+    </style>
+
+    <style name="MyAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:buttonBarButtonStyle">@style/MyAlertDialogButton</item>
+    </style>
+
+    <style name="MyAlertDialogButton" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <!-- Fullscreen theme without action bar, status bar, etc -->
+    <style name="Theme.YourApp.Fullscreen" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@android:color/black</item>
+    </style>
+
+    <style name="Theme.KonKhmerMovie.Fullscreen" parent="Theme.KonKhmerMovie">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+
+    <style name="CustomHintText" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">#888888</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:translationY">1dp</item> <!-- This shifts the floating label lower -->
+    </style>
+
+    <style name="RedHintText" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">#FF0000</item> <!-- 🔴 Red floating label -->
+        <item name="android:textSize">12sp</item>
+    </style>
+    <style name="TransparentDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+
+
+
+
+
+
+
+
+
+
+
+    <style name="WhiteHintText" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+
+</resources>
