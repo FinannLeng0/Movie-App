@@ -211,13 +211,15 @@ class DownloadFragment : Fragment() {
                 }
                 adapter.notifyDataSetChanged()
 
-                // Show or hide "No video download" message
-                if (downloadList.isEmpty()) {
-                    binding.textNoDownloads.visibility = View.VISIBLE
-                    binding.recyclerViewDownloads.visibility = View.GONE
-                } else {
-                    binding.textNoDownloads.visibility = View.GONE
-                    binding.recyclerViewDownloads.visibility = View.VISIBLE
+                // ✅ Safe binding access
+                _binding?.let { binding ->
+                    if (downloadList.isEmpty()) {
+                        binding.textNoDownloads.visibility = View.VISIBLE
+                        binding.recyclerViewDownloads.visibility = View.GONE
+                    } else {
+                        binding.textNoDownloads.visibility = View.GONE
+                        binding.recyclerViewDownloads.visibility = View.VISIBLE
+                    }
                 }
             }
 

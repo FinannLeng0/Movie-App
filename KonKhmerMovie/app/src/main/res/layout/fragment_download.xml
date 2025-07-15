@@ -27,7 +27,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/titleText"
         android:clipToPadding="false"
-        android:paddingBottom="16dp"
+        android:paddingBottom="100dp"
         android:paddingTop="8dp" />
 
     <TextView
