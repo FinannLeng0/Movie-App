@@ -35,6 +35,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                android:fontFamily="@font/movie"
                 android:maxLines="3"
                 android:ellipsize="end"
                 android:layout_gravity="center"

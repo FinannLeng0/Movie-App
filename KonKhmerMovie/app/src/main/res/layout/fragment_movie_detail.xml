@@ -81,6 +81,7 @@
             android:text="Movie Title"
             android:textColor="@android:color/white"
             android:textSize="22sp"
+            android:fontFamily="@font/movie"
             android:textStyle="bold"
             android:paddingTop="16dp"
             android:paddingBottom="4dp"
@@ -95,6 +96,7 @@
             android:text="Movie description goes here..."
             android:textColor="#BBBBBB"
             android:textSize="14sp"
+            android:fontFamily="@font/movie"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:paddingBottom="12dp" />
@@ -138,6 +140,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Favorite"
+                    android:fontFamily="@font/movie"
                     android:textColor="#CCCCCC"
                     android:textSize="12sp"
                     android:paddingTop="4dp" />
@@ -166,6 +169,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Download"
+                    android:fontFamily="@font/movie"
+
                     android:textColor="#CCCCCC"
                     android:textSize="12sp"
                     android:paddingTop="4dp" />
@@ -182,6 +187,7 @@
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:fontFamily="@font/movie"
             android:paddingStart="16dp"
             android:paddingTop="12dp"
             android:paddingBottom="4dp" />

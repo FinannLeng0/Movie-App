@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter new name"
+        android:fontFamily="@font/movie"
         android:textColor="@android:color/white"
         android:textColorHint="@android:color/white"
         android:background="@drawable/edittext_background"
@@ -35,6 +36,7 @@
         <TextView
             android:id="@+id/btnSelectImage"
             android:layout_width="wrap_content"
+            android:fontFamily="@font/movie"
             android:layout_height="wrap_content"
             android:text="Choose Profile Image"
             android:textColor="@color/ic_launcher_background"

@@ -9,6 +9,9 @@
     <color name="holo_blue_dark">#FF0000</color>
     <color name="dark_gray">#222222</color>
     <color name="success_green">#4CAF50</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="teal_200">#03DAC5</color>
+    <color name="design_default_color_error">#B00020</color>
 
 
 

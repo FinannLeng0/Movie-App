@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
+import com.example.konkhmermovie.R
 
 class DashboardFragment : Fragment() {
 
@@ -38,10 +39,11 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        applyCustomFontToAllText(binding.root) // ✅ Apply font to all TextViews inside this fragment
+
         userMovieAdapter = UserMovieAdapter(requireContext(), movieList,
             onItemClick = { movie ->
                 Toast.makeText(requireContext(), "Clicked: ${movie.title}", Toast.LENGTH_SHORT).show()
-                // Handle item click (navigate, play video etc.)
             },
             onDeleteClick = { movie ->
                 confirmDeleteMovie(movie)
@@ -80,7 +82,6 @@ class DashboardFragment : Fragment() {
                     }
 
                     binding.tvNoVideos.visibility = if (movieList.isEmpty()) View.VISIBLE else View.GONE
-
                     userMovieAdapter.notifyDataSetChanged()
                 }
 
@@ -108,13 +109,11 @@ class DashboardFragment : Fragment() {
     private fun deleteMovie(movie: Movie) {
         val videoId = movie.id ?: return
 
-        // Remove from Firebase Realtime Database
         val videoRef = dbRef.child(videoId)
         videoRef.removeValue()
             .addOnSuccessListener {
                 Toast.makeText(requireContext(), "Video deleted", Toast.LENGTH_SHORT).show()
 
-                // Remove from local list and notify adapter
                 movieList.remove(movie)
                 userMovieAdapter.notifyDataSetChanged()
 
@@ -124,12 +123,24 @@ class DashboardFragment : Fragment() {
                 Toast.makeText(requireContext(), "Failed to delete: ${it.message}", Toast.LENGTH_SHORT).show()
             }
 
-        // Remove video and thumbnail from Firebase Storage if available
         movie.videoUrl?.let { url ->
             FirebaseStorage.getInstance().getReferenceFromUrl(url).delete()
         }
         movie.thumbnailUrl?.let { url ->
             FirebaseStorage.getInstance().getReferenceFromUrl(url).delete()
+        }
+    }
+
+    // ✅ This will apply your custom font to all TextViews inside the fragment
+    private fun applyCustomFontToAllText(view: View) {
+        val typeface = androidx.core.content.res.ResourcesCompat.getFont(requireContext(), R.font.movie)
+        when (view) {
+            is android.widget.TextView -> view.typeface = typeface
+            is ViewGroup -> {
+                for (i in 0 until view.childCount) {
+                    applyCustomFontToAllText(view.getChildAt(i))
+                }
+            }
         }
     }
 

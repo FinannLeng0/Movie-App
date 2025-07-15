@@ -81,6 +81,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Welcome!"
+                                android:fontFamily="@font/movie"
                                 android:textColor="@android:color/white"
                                 android:textSize="28sp"
                                 android:textStyle="bold"
@@ -88,6 +89,7 @@
 
                             <TextView
                                 android:id="@+id/tvEmail"
+                                android:fontFamily="@font/movie"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#CCCCCC"
@@ -130,6 +132,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
+                        android:fontFamily="@font/movie"
                         android:text="Contact Us"
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
@@ -140,6 +143,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:fontFamily="@font/movie"
                         android:gravity="center"
                         android:text="Dashboard"
                         android:textColor="@android:color/white"
@@ -190,6 +194,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="011 168 111"
+                        android:fontFamily="@font/movie"
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
                         android:layout_marginStart="12dp" />
@@ -215,6 +220,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Facebook Page"
+                        android:fontFamily="@font/movie"
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
                         android:layout_marginStart="12dp" />
@@ -240,6 +246,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Our Telegram"
+                        android:fontFamily="@font/movie"
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
                         android:layout_marginStart="12dp" />
@@ -265,6 +272,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Our TikTok"
+                        android:fontFamily="@font/movie"
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
                         android:layout_marginStart="12dp" />
@@ -290,6 +298,7 @@
                         android:text="Phnom Penh, Cambodia"
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
+                        android:fontFamily="@font/movie"
                         android:layout_marginStart="12dp" />
                 </LinearLayout>
 

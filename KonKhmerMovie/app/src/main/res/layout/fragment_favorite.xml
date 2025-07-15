@@ -14,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:fontFamily="@font/movie"
         android:letterSpacing="0.04"
         android:padding="8dp"
         android:text="My Favorite Movies"

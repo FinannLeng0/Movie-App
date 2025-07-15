@@ -5,6 +5,9 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -14,6 +17,7 @@ import android.webkit.WebView
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
@@ -22,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.konkhmermovie.R
 import com.example.konkhmermovie.databinding.FragmentProfileSuccessBinding
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
@@ -46,6 +51,12 @@ class ProfileSuccessFragment : Fragment() {
 
     private var ivPreviewDialog: ImageView? = null
     private var editDialog: AlertDialog? = null
+
+    private var connectivityManager: ConnectivityManager? = null
+    private var networkCallback: ConnectivityManager.NetworkCallback? = null
+    private var snackbar: Snackbar? = null
+    private var hasShownConnectedOnce = false
+
 
     private lateinit var videoAdapter: UserMovieAdapter
     private val userVideos = mutableListOf<Movie>()
@@ -83,6 +94,7 @@ class ProfileSuccessFragment : Fragment() {
         val contactContainer = view.findViewById<LinearLayout>(R.id.contactContainer)
         val dashboardContainer = view.findViewById<LinearLayout>(R.id.dashboardContainer)
         val recyclerViewUserVideos = view.findViewById<RecyclerView>(R.id.recyclerViewUserVideos)
+        setupNetworkCallback()
 
         recyclerViewUserVideos.layoutManager = LinearLayoutManager(requireContext())
         recyclerViewUserVideos.setHasFixedSize(true)
@@ -254,6 +266,64 @@ class ProfileSuccessFragment : Fragment() {
             showEditDialog()
         }
     }
+    private fun setupNetworkCallback() {
+        connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                activity?.runOnUiThread {
+                    snackbar?.dismiss()
+
+                    if (!hasShownConnectedOnce) {
+                        hasShownConnectedOnce = true
+                        val root = requireActivity().findViewById<View>(R.id.coordinatorLayoutRoot)
+                        Snackbar.make(root, "Internet Connected", Snackbar.LENGTH_SHORT)
+                            .setDuration(3000)
+                            .setAnchorView(R.id.bottom_navigation)
+                            .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.success_green))
+                            .setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+                            .show()
+                    }
+                }
+            }
+
+            override fun onLost(network: Network) {
+                activity?.runOnUiThread {
+                    hasShownConnectedOnce = false
+                    showNoInternetSnackbar()
+                }
+            }
+        }
+
+        connectivityManager?.registerDefaultNetworkCallback(networkCallback!!)
+        if (!isNetworkConnected()) {
+            hasShownConnectedOnce = false
+            showNoInternetSnackbar()
+        } else {
+            hasShownConnectedOnce = true
+        }
+    }
+
+    private fun isNetworkConnected(): Boolean {
+        val cm = connectivityManager ?: return false
+        val network = cm.activeNetwork ?: return false
+        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    private fun showNoInternetSnackbar() {
+        if (snackbar?.isShown == true) return
+
+        val root = requireActivity().findViewById<View>(R.id.coordinatorLayoutRoot)
+        snackbar = Snackbar.make(root, "No Internet Connection", Snackbar.LENGTH_LONG)
+            .setDuration(5000)
+            .setAnchorView(R.id.bottom_navigation)
+            .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.design_default_color_error))
+            .setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+        snackbar?.show()
+    }
+
+
 
     private fun showLoadingDialog() {
         val loadingView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_loading, null)
@@ -490,5 +560,10 @@ class ProfileSuccessFragment : Fragment() {
         _binding = null
         ivPreviewDialog = null
         editDialog = null
+        try {
+            connectivityManager?.unregisterNetworkCallback(networkCallback!!)
+        } catch (_: Exception) {}
+
     }
+
 }

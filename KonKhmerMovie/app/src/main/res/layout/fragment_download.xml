@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:text="My Downloads"
         android:textColor="#FFFFFF"
+        android:fontFamily="@font/movie"
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginBottom="12dp"
@@ -28,4 +29,16 @@
         android:clipToPadding="false"
         android:paddingBottom="16dp"
         android:paddingTop="8dp" />
+
+    <TextView
+        android:id="@+id/textNoDownloads"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No video download"
+        android:textColor="#AAAAAA"
+        android:textSize="16sp"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        />
+
 </RelativeLayout>

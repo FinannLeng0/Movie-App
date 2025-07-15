@@ -25,6 +25,7 @@
             android:id="@+id/titleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/movie"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -42,6 +43,7 @@
                 android:id="@+id/postStatusTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/movie"
                 android:text="Your video was posted"
                 android:textColor="@android:color/holo_green_light"
                 android:textSize="13sp" />
@@ -55,6 +57,7 @@
                 android:id="@+id/deleteTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/movie"
                 android:text="Delete"
                 android:textColor="@android:color/holo_red_dark"
                 android:textSize="13sp"

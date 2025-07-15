@@ -1,5 +1,9 @@
 package com.example.konkhmermovie.home
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -8,14 +12,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Button
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.konkhmermovie.databinding.FragmentHomeBinding
-import com.example.konkhmermovie.home.HomeFragmentDirections
-import com.google.firebase.auth.FirebaseAuth
 import com.example.konkhmermovie.R
+import com.example.konkhmermovie.databinding.FragmentHomeBinding
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 
 class HomeFragment : Fragment() {
 
@@ -28,6 +33,11 @@ class HomeFragment : Fragment() {
     private lateinit var movieAdapterPopular: MovieAdapter
     private lateinit var movieAdapterKhmer: MovieAdapter
     private lateinit var movieAdapterAnime: MovieAdapter
+
+    private var snackbar: Snackbar? = null
+    private var hasShownConnectedOnce = false
+    private var connectivityManager: ConnectivityManager? = null
+    private var networkCallback: ConnectivityManager.NetworkCallback? = null
 
     private val sliderHandler = Handler(Looper.getMainLooper())
     private var slideDirectionForward = true
@@ -60,7 +70,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         val fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fragment_fade_in)
         view.startAnimation(fadeIn)
 
@@ -68,7 +77,9 @@ class HomeFragment : Fragment() {
         bottomNav?.visibility = View.VISIBLE
         bottomNav?.animate()?.alpha(1f)?.setDuration(200)?.start()
 
-        // Banner setup
+        setupNetworkCallback()
+
+        // Banners
         bannerAdapter = BannerAdapter()
         binding.bannerViewPager.adapter = bannerAdapter
         viewModel.banners.observe(viewLifecycleOwner) {
@@ -76,24 +87,22 @@ class HomeFragment : Fragment() {
             startAutoSlide()
         }
 
-
-        // MovieAdapters with correct argument order for navigation
+        // Movie Adapters
         movieAdapterPopular = MovieAdapter { movie ->
             val action = HomeFragmentDirections.actionHomeFragmentToMovieDetailFragment(
-                movie.description.ifEmpty { "No Description" }, // description first
-                movie.title.ifEmpty { "No Title" },             // title second
-                movie.imageUrl.ifEmpty { "" },                   // imageUrl third
-                movie.videoUrl.ifEmpty { "" }                    // videoUrl fourth
+                movie.description.ifEmpty { "No Description" },
+                movie.title.ifEmpty { "No Title" },
+                movie.imageUrl.ifEmpty { "" },
+                movie.videoUrl.ifEmpty { "" }
             )
             findNavController().navigate(action)
         }
 
-
         movieAdapterKhmer = MovieAdapter { movie ->
             val action = HomeFragmentDirections.actionHomeFragmentToMovieDetailFragment(
-                movie.description.ifEmpty { "No Description" }, // description first
-                movie.title.ifEmpty { "No Title" },             // title second
-                movie.imageUrl.ifEmpty { "" },                   // imageUrl third
+                movie.description.ifEmpty { "No Description" },
+                movie.title.ifEmpty { "No Title" },
+                movie.imageUrl.ifEmpty { "" },
                 movie.videoUrl.ifEmpty { "" }
             )
             findNavController().navigate(action)
@@ -101,15 +110,14 @@ class HomeFragment : Fragment() {
 
         movieAdapterAnime = MovieAdapter { movie ->
             val action = HomeFragmentDirections.actionHomeFragmentToMovieDetailFragment(
-                movie.description.ifEmpty { "No Description" }, // description first
-                movie.title.ifEmpty { "No Title" },             // title second
-                movie.imageUrl.ifEmpty { "" },                   // imageUrl third
+                movie.description.ifEmpty { "No Description" },
+                movie.title.ifEmpty { "No Title" },
+                movie.imageUrl.ifEmpty { "" },
                 movie.videoUrl.ifEmpty { "" }
             )
             findNavController().navigate(action)
         }
 
-        // Set LayoutManagers
         binding.popularRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.khmerRecyclerView.layoutManager =
@@ -117,17 +125,20 @@ class HomeFragment : Fragment() {
         binding.animeRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
-        // Set adapters
         binding.popularRecyclerView.adapter = movieAdapterPopular
         binding.khmerRecyclerView.adapter = movieAdapterKhmer
         binding.animeRecyclerView.adapter = movieAdapterAnime
 
-        // Observe data
-        viewModel.popularMovies.observe(viewLifecycleOwner) { movieAdapterPopular.submitList(it) }
-        viewModel.khmerMovies.observe(viewLifecycleOwner) { movieAdapterKhmer.submitList(it) }
-        viewModel.animeMovies.observe(viewLifecycleOwner) { movieAdapterAnime.submitList(it) }
+        viewModel.popularMovies.observe(viewLifecycleOwner) {
+            movieAdapterPopular.submitList(it)
+        }
+        viewModel.khmerMovies.observe(viewLifecycleOwner) {
+            movieAdapterKhmer.submitList(it)
+        }
+        viewModel.animeMovies.observe(viewLifecycleOwner) {
+            movieAdapterAnime.submitList(it)
+        }
 
-        // Category buttons list
         val categoryButtons = listOf(
             binding.btnAction,
             binding.btnComedy,
@@ -136,13 +147,11 @@ class HomeFragment : Fragment() {
             binding.btnHorror
         )
 
-        // Initialize: no selection, transparent background, white text
         categoryButtons.forEach {
             it.isSelected = false
             updateButtonStyle(it, false)
         }
 
-        // Set click listeners for category buttons
         categoryButtons.forEach { button ->
             button.setOnClickListener {
                 categoryButtons.forEach { btn ->
@@ -152,31 +161,82 @@ class HomeFragment : Fragment() {
                 button.isSelected = true
                 updateButtonStyle(button, true)
 
-                // TODO: Add category filtering logic here
+                // TODO: Add category filter logic here
             }
         }
+
         binding.profileIcon.setOnClickListener {
             val user = FirebaseAuth.getInstance().currentUser
             if (user != null) {
-                // User is logged in -> go to Profile fragment showing profile info
                 findNavController().navigate(R.id.action_homeFragment_to_profileSuccessFragment)
             } else {
-                // User not logged in -> go to Profile fragment showing signup/login UI
                 findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
             }
         }
-
     }
 
+    private fun setupNetworkCallback() {
+        connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
+        networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                activity?.runOnUiThread {
+                    snackbar?.dismiss()
+                    if (!hasShownConnectedOnce) {
+                        hasShownConnectedOnce = true
+                        val coordinatorLayout = requireActivity().findViewById<View>(R.id.coordinatorLayoutRoot)
+                        Snackbar.make(coordinatorLayout, "Internet Connected", Snackbar.LENGTH_SHORT)
+                            .setAnchorView(R.id.bottom_navigation)
+                            .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.success_green))
+                            .setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+                            .show()
+                    }
+                }
+            }
+
+            override fun onLost(network: Network) {
+                activity?.runOnUiThread {
+                    hasShownConnectedOnce = false
+                    showNoInternetSnackbar()
+                }
+            }
+        }
+
+        connectivityManager?.registerDefaultNetworkCallback(networkCallback!!)
+
+        if (!isNetworkConnected()) {
+            hasShownConnectedOnce = false
+            showNoInternetSnackbar()
+        } else {
+            hasShownConnectedOnce = true
+        }
+    }
+
+    private fun isNetworkConnected(): Boolean {
+        val cm = connectivityManager ?: return false
+        val network = cm.activeNetwork ?: return false
+        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    private fun showNoInternetSnackbar() {
+        if (snackbar?.isShown == true) return
+
+        val coordinatorLayout = requireActivity().findViewById<View>(R.id.coordinatorLayoutRoot)
+        snackbar = Snackbar.make(coordinatorLayout, "No Internet Connection", Snackbar.LENGTH_LONG)
+            .setAnchorView(R.id.bottom_navigation)
+            .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.design_default_color_error))
+            .setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+        snackbar?.show()
+    }
 
     private fun updateButtonStyle(button: Button, selected: Boolean) {
         if (selected) {
-            button.setBackgroundColor(resources.getColor(android.R.color.holo_red_dark, null))
-            button.setTextColor(resources.getColor(android.R.color.white, null))
+            button.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_red_dark))
+            button.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
         } else {
-            button.setBackgroundColor(resources.getColor(android.R.color.transparent, null))
-            button.setTextColor(resources.getColor(android.R.color.white, null))
+            button.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.transparent))
+            button.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
         }
     }
 
@@ -195,7 +255,11 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        sliderHandler.removeCallbacks(sliderRunnable)
         _binding = null
+        sliderHandler.removeCallbacks(sliderRunnable)
+        try {
+            connectivityManager?.unregisterNetworkCallback(networkCallback!!)
+        } catch (_: Exception) {
+        }
     }
 }

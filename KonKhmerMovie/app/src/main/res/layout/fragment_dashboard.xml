@@ -20,13 +20,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="No videos posted yet"
+        android:fontFamily="@font/movie"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:gravity="center"
         android:visibility="gone"
         android:padding="20dp" />
-
-
-
 
 </FrameLayout>

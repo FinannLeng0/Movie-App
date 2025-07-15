@@ -1,18 +1,24 @@
 package com.example.konkhmermovie.favorite
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.konkhmermovie.R
 import com.example.konkhmermovie.databinding.FragmentFavoriteBinding
 import com.example.konkhmermovie.home.Movie
 import com.example.konkhmermovie.home.MovieAdapter
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.example.konkhmermovie.R
 
 class FavoriteFragment : Fragment() {
 
@@ -28,6 +34,12 @@ class FavoriteFragment : Fragment() {
     private lateinit var movieAdapter: MovieAdapter
 
     private val favoriteKeysMap = mutableMapOf<String, String>()
+
+    // ✅ Network variables
+    private var connectivityManager: ConnectivityManager? = null
+    private var networkCallback: ConnectivityManager.NetworkCallback? = null
+    private var snackbar: Snackbar? = null
+    private var hasShownConnectedOnce = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +57,7 @@ class FavoriteFragment : Fragment() {
             return
         }
 
+        setupNetworkCallback()
         setupFavoriteRecyclerView()
         loadFavorites()
     }
@@ -73,7 +86,7 @@ class FavoriteFragment : Fragment() {
     private fun loadFavorites() {
         databaseRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                if (_binding == null) return  // <<== PREVENT CRASH HERE
+                if (_binding == null) return
 
                 val favorites = mutableListOf<Movie>()
                 favoriteKeysMap.clear()
@@ -86,17 +99,12 @@ class FavoriteFragment : Fragment() {
                 }
                 movieAdapter.submitList(favorites)
 
-                if (favorites.isEmpty()) {
-                    binding.emptyMessage.visibility = View.VISIBLE
-                    binding.recyclerView.visibility = View.GONE
-                } else {
-                    binding.emptyMessage.visibility = View.GONE
-                    binding.recyclerView.visibility = View.VISIBLE
-                }
+                binding.emptyMessage.visibility = if (favorites.isEmpty()) View.VISIBLE else View.GONE
+                binding.recyclerView.visibility = if (favorites.isEmpty()) View.GONE else View.VISIBLE
             }
 
             override fun onCancelled(error: DatabaseError) {
-                if (_binding == null) return  // <<== PREVENT CRASH HERE
+                if (_binding == null) return
                 Toast.makeText(requireContext(), "Failed to load favorites: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         })
@@ -128,8 +136,71 @@ class FavoriteFragment : Fragment() {
         }
     }
 
+    // ✅ Setup network connection monitor
+    private fun setupNetworkCallback() {
+        connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                activity?.runOnUiThread {
+                    snackbar?.dismiss()
+
+                    if (!hasShownConnectedOnce) {
+                        hasShownConnectedOnce = true
+                        val root = requireActivity().findViewById<View>(R.id.coordinatorLayoutRoot)
+                        Snackbar.make(root, "Internet Connected", Snackbar.LENGTH_SHORT)
+                            .setDuration(3000)
+                            .setAnchorView(R.id.bottom_navigation)
+                            .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.success_green))
+                            .setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+                            .show()
+                    }
+                }
+            }
+
+            override fun onLost(network: Network) {
+                activity?.runOnUiThread {
+                    hasShownConnectedOnce = false
+                    showNoInternetSnackbar()
+                }
+            }
+        }
+
+        connectivityManager?.registerDefaultNetworkCallback(networkCallback!!)
+        if (!isNetworkConnected()) {
+            hasShownConnectedOnce = false
+            showNoInternetSnackbar()
+        } else {
+            hasShownConnectedOnce = true
+        }
+    }
+
+    private fun isNetworkConnected(): Boolean {
+        val cm = connectivityManager ?: return false
+        val network = cm.activeNetwork ?: return false
+        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    private fun showNoInternetSnackbar() {
+        if (snackbar?.isShown == true) return
+
+        val root = requireActivity().findViewById<View>(R.id.coordinatorLayoutRoot)
+        snackbar = Snackbar.make(root, "No Internet Connection", Snackbar.LENGTH_LONG)
+            .setDuration(5000)
+            .setAnchorView(R.id.bottom_navigation)
+            .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.design_default_color_error))
+            .setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+        snackbar?.show()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        try {
+            connectivityManager?.unregisterNetworkCallback(networkCallback!!)
+        } catch (e: Exception) {
+            // Ignore if already unregistered
+        }
     }
 }

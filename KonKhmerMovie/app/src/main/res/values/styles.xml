@@ -58,20 +58,56 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
-
-
-
-
-
-
-
-
-
-
-
-    <style name="WhiteHintText" parent="TextAppearance.Material3.BodySmall">
-        <item name="android:textColor">@android:color/white</item>
+    <style name="CustomHintTextAppearance" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/movie</item>
     </style>
+
+    <style name="CustomErrorTextAppearance" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">@color/red</item>
+        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">@font/movie</item>
+    </style>
+
+    <style name="CustomHelperTextAppearance" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">@font/movie</item>
+    </style>
+
+    <style name="CustomCounterTextAppearance" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">@font/movie</item>
+    </style>
+
+    <style name="CustomEditTextAppearance" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">16sp</item>
+        <item name="fontFamily">@font/movie</item>
+
+    </style>
+
+    <style name="WhiteHintText" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:fontFamily">@font/movie</item> <!-- optional -->
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="Headline6Font" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">@font/movie</item>
+    </style>
+
+    <style name="Body1Font" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="fontFamily">@font/movie</item>
+    </style>
+
+    <style name="Body2Font" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="fontFamily">@font/movie</item>
+    </style>
+
+
+
 
 
 </resources>

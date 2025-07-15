@@ -1,17 +1,28 @@
 package com.example.konkhmermovie.search
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup as AndroidViewGroup
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.konkhmermovie.R
 import com.example.konkhmermovie.databinding.FragmentSearchBinding
 import com.example.konkhmermovie.home.Movie
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.*
 
 class SearchFragment : Fragment() {
@@ -21,6 +32,11 @@ class SearchFragment : Fragment() {
 
     private lateinit var adapter: ThumbnailMovieAdapter
     private val allMovies = mutableListOf<Movie>()
+
+    private var snackbar: Snackbar? = null
+    private var hasShownConnectedOnce = false
+    private var connectivityManager: ConnectivityManager? = null
+    private var networkCallback: ConnectivityManager.NetworkCallback? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,6 +48,9 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        applyCustomFontToAllText(binding.root)
+        setupNetworkCallback()
 
         adapter = ThumbnailMovieAdapter { movie ->
             val imageToShow = if (movie.thumbnailUrl.isNotEmpty()) movie.thumbnailUrl else movie.imageUrl
@@ -74,6 +93,75 @@ class SearchFragment : Fragment() {
         })
     }
 
+
+    private fun setupNetworkCallback() {
+        connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                activity?.runOnUiThread {
+                    snackbar?.dismiss()
+
+                    // ✅ Show only once after disconnect
+                    if (!hasShownConnectedOnce) {
+                        hasShownConnectedOnce = true
+
+                        val coordinatorLayout = requireActivity().findViewById<View>(R.id.coordinatorLayoutRoot)
+                        Snackbar.make(coordinatorLayout, "Internet Connected", Snackbar.LENGTH_SHORT)
+                            .setDuration(3000)
+                            .setAnchorView(R.id.bottom_navigation)
+                            .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.success_green))
+                            .setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+                            .show()
+                    }
+                }
+            }
+
+            override fun onLost(network: Network) {
+                activity?.runOnUiThread {
+                    hasShownConnectedOnce = false // ✅ Reset so next connect will show
+                    showNoInternetSnackbar()
+                }
+            }
+        }
+
+        connectivityManager?.registerDefaultNetworkCallback(networkCallback!!)
+
+        // Initial check
+        if (!isNetworkConnected()) {
+            hasShownConnectedOnce = false
+            showNoInternetSnackbar()
+        } else {
+            hasShownConnectedOnce = true // Assume already connected at start
+        }
+    }
+
+
+
+    private fun isNetworkConnected(): Boolean {
+        val cm = connectivityManager ?: return false
+        val network = cm.activeNetwork ?: return false
+        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    private fun showNoInternetSnackbar() {
+        if (snackbar?.isShown == true) return
+
+        val coordinatorLayout = requireActivity().findViewById<View>(R.id.coordinatorLayoutRoot)
+        snackbar = Snackbar.make(coordinatorLayout, "No Internet Connection", Snackbar.LENGTH_LONG)
+            .setDuration(5000) // 👈 5 seconds
+            .setAnchorView(R.id.bottom_navigation)
+            .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.design_default_color_error))
+            .setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+        snackbar?.show()
+    }
+
+
+
+
+
+
     private fun loadAllMovies() {
         allMovies.clear()
         val videosRef = FirebaseDatabase.getInstance().getReference("videos")
@@ -102,40 +190,11 @@ class SearchFragment : Fragment() {
                         }
                     }
 
-                    override fun onCancelled(error: DatabaseError) {
-                        if (!isAdded || _binding == null) return
-                        _binding?.let {
-                            filterMovies(it.searchBar.text.toString())
-                        }
-                    }
+                    override fun onCancelled(error: DatabaseError) {}
                 })
             }
 
-            override fun onCancelled(error: DatabaseError) {
-                moviesRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        if (!isAdded || _binding == null) return
-
-                        for (categorySnapshot in snapshot.children) {
-                            for (movieSnapshot in categorySnapshot.children) {
-                                val movie = movieSnapshot.getValue(Movie::class.java)
-                                if (movie != null) allMovies.add(movie)
-                            }
-                        }
-
-                        _binding?.let {
-                            filterMovies(it.searchBar.text.toString())
-                        }
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        if (!isAdded || _binding == null) return
-                        _binding?.let {
-                            filterMovies(it.searchBar.text.toString())
-                        }
-                    }
-                })
-            }
+            override fun onCancelled(error: DatabaseError) {}
         })
     }
 
@@ -159,8 +218,25 @@ class SearchFragment : Fragment() {
         }
     }
 
+    private fun applyCustomFontToAllText(view: View) {
+        val typeface = ResourcesCompat.getFont(requireContext(), R.font.movie) ?: return
+        when (view) {
+            is TextView -> view.typeface = typeface
+            is AndroidViewGroup -> {
+                for (i in 0 until view.childCount) {
+                    applyCustomFontToAllText(view.getChildAt(i))
+                }
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        try {
+            connectivityManager?.unregisterNetworkCallback(networkCallback!!)
+        } catch (e: Exception) {
+            // Ignore if already unregistered
+        }
     }
 }

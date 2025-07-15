@@ -28,12 +28,24 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import java.io.File
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import com.google.android.material.snackbar.Snackbar
+import androidx.core.content.ContextCompat
+
 
 class MovieDetailFragment : Fragment() {
 
     companion object {
         // Removed deprecated request code since we use ActivityResultLauncher now
     }
+    private var connectivityManager: ConnectivityManager? = null
+    private var networkCallback: ConnectivityManager.NetworkCallback? = null
+    private var hasShownConnectedOnce = false
+    private var snackbar: Snackbar? = null
+
+
 
     private val auth = FirebaseAuth.getInstance()
     private val uid get() = auth.currentUser?.uid
@@ -120,6 +132,7 @@ class MovieDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+        setupNetworkCallback()
 
         player = ExoPlayerHolder.getPlayer(requireContext())
 
@@ -193,6 +206,61 @@ class MovieDetailFragment : Fragment() {
         checkIfFavorite()
         setupMoreMovies()
     }
+    private fun setupNetworkCallback() {
+        connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                activity?.runOnUiThread {
+                    snackbar?.dismiss()
+                    if (!hasShownConnectedOnce) {
+                        hasShownConnectedOnce = true
+                        val rootView = binding.root
+                        Snackbar.make(rootView, "Internet Connected", Snackbar.LENGTH_SHORT)
+                            .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.success_green))
+                            .setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+                            .show()
+                    }
+                }
+            }
+
+            override fun onLost(network: Network) {
+                activity?.runOnUiThread {
+                    hasShownConnectedOnce = false
+                    showNoInternetSnackbar()
+                }
+            }
+        }
+
+        connectivityManager?.registerDefaultNetworkCallback(networkCallback!!)
+
+        // Initial check
+        if (!isNetworkConnected()) {
+            hasShownConnectedOnce = false
+            showNoInternetSnackbar()
+        } else {
+            hasShownConnectedOnce = true
+        }
+    }
+
+    private fun isNetworkConnected(): Boolean {
+        val cm = connectivityManager ?: return false
+        val network = cm.activeNetwork ?: return false
+        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    private fun showNoInternetSnackbar() {
+        if (snackbar?.isShown == true) return
+
+        val rootView = binding.root
+        snackbar = Snackbar.make(rootView, "No Internet Connection", Snackbar.LENGTH_LONG)
+            .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.design_default_color_error))
+            .setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+        snackbar?.show()
+    }
+
+
 
     private fun resolveAndInitialize(videoUrlOrFilename: String) {
         if (videoUrlOrFilename.startsWith("https://")) {
@@ -372,5 +440,10 @@ class MovieDetailFragment : Fragment() {
         player?.removeListener(playerListener)
         playerView.player = null
         _binding = null
+
+        try {
+            connectivityManager?.unregisterNetworkCallback(networkCallback!!)
+        } catch (_: Exception) { }
     }
+
 }

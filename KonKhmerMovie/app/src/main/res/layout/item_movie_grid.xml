@@ -22,6 +22,7 @@
         <TextView
             android:id="@+id/textTitle"
             android:layout_width="match_parent"
+            android:fontFamily="@font/movie"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
             android:background="#222222"

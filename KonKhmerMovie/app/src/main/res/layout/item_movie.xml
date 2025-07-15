@@ -33,6 +33,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
+                android:fontFamily="@font/movie"
                 android:textStyle="bold"
                 android:maxLines="3"
                 android:ellipsize="end"

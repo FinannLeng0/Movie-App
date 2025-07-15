@@ -4,6 +4,9 @@ import android.Manifest
 import android.app.DownloadManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.*
 import android.util.Log
@@ -20,6 +23,8 @@ import com.example.konkhmermovie.databinding.FragmentDownloadBinding
 import com.example.konkhmermovie.databinding.ItemDownloadBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import androidx.core.content.res.ResourcesCompat
+import com.google.android.material.snackbar.Snackbar
 
 class DownloadFragment : Fragment() {
 
@@ -32,6 +37,12 @@ class DownloadFragment : Fragment() {
 
     private val downloadList = mutableListOf<DownloadItem>()
     private lateinit var adapter: DownloadAdapter
+
+
+    private var connectivityManager: ConnectivityManager? = null
+    private var networkCallback: ConnectivityManager.NetworkCallback? = null
+    private var snackbar: Snackbar? = null
+    private var hasShownConnectedOnce = false
 
     private val userId: String? get() = FirebaseAuth.getInstance().currentUser?.uid
     private val downloadsRef: DatabaseReference? get() =
@@ -87,6 +98,7 @@ class DownloadFragment : Fragment() {
             return
         }
 
+
         // 🔒 Storage permission for Android 9 and below
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -107,6 +119,61 @@ class DownloadFragment : Fragment() {
 
         loadDownloadsFromFirebase()
         handler.post(progressChecker)
+        setupNetworkCallback()
+
+    }
+    private fun setupNetworkCallback() {
+        connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                activity?.runOnUiThread {
+                    snackbar?.dismiss()
+                    if (!hasShownConnectedOnce) {
+                        hasShownConnectedOnce = true
+                        val root = requireActivity().findViewById<View>(R.id.coordinatorLayoutRoot)
+                        Snackbar.make(root, "Internet Connected", Snackbar.LENGTH_SHORT)
+                            .setDuration(3000)
+                            .setAnchorView(R.id.bottom_navigation)
+                            .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.success_green))
+                            .setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+                            .show()
+                    }
+                }
+            }
+
+            override fun onLost(network: Network) {
+                activity?.runOnUiThread {
+                    hasShownConnectedOnce = false
+                    showNoInternetSnackbar()
+                }
+            }
+        }
+
+        connectivityManager?.registerDefaultNetworkCallback(networkCallback!!)
+        if (!isNetworkConnected()) {
+            hasShownConnectedOnce = false
+            showNoInternetSnackbar()
+        } else {
+            hasShownConnectedOnce = true
+        }
+    }
+    private fun isNetworkConnected(): Boolean {
+        val cm = connectivityManager ?: return false
+        val network = cm.activeNetwork ?: return false
+        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    private fun showNoInternetSnackbar() {
+        if (snackbar?.isShown == true) return
+        val root = requireActivity().findViewById<View>(R.id.coordinatorLayoutRoot)
+        snackbar = Snackbar.make(root, "No Internet Connection", Snackbar.LENGTH_LONG)
+            .setDuration(5000)
+            .setAnchorView(R.id.bottom_navigation)
+            .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.design_default_color_error))
+            .setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+        snackbar?.show()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -143,6 +210,15 @@ class DownloadFragment : Fragment() {
                     }
                 }
                 adapter.notifyDataSetChanged()
+
+                // Show or hide "No video download" message
+                if (downloadList.isEmpty()) {
+                    binding.textNoDownloads.visibility = View.VISIBLE
+                    binding.recyclerViewDownloads.visibility = View.GONE
+                } else {
+                    binding.textNoDownloads.visibility = View.GONE
+                    binding.recyclerViewDownloads.visibility = View.VISIBLE
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -150,6 +226,7 @@ class DownloadFragment : Fragment() {
             }
         })
     }
+
 
     private fun pauseDownload(position: Int) {
         val item = downloadList.getOrNull(position) ?: return
@@ -200,7 +277,13 @@ class DownloadFragment : Fragment() {
         super.onDestroyView()
         handler.removeCallbacks(progressChecker)
         _binding = null
+        try {
+            connectivityManager?.unregisterNetworkCallback(networkCallback!!)
+        } catch (e: Exception) {
+            // ignore if already unregistered
+        }
     }
+
 
     inner class DownloadAdapter(
         private val downloads: MutableList<DownloadItem>,
@@ -223,6 +306,12 @@ class DownloadFragment : Fragment() {
         override fun onBindViewHolder(holder: DownloadViewHolder, position: Int) {
             val item = downloads[position]
             holder.itemBinding.textTitle.text = item.title
+
+            // Set your custom font here:
+            val typeface = ResourcesCompat.getFont(holder.itemView.context, R.font.movie)
+            holder.itemBinding.textTitle.typeface = typeface
+            holder.itemBinding.textProgress.typeface = typeface
+            holder.itemBinding.textPause.typeface = typeface
 
             Glide.with(holder.itemView)
                 .load(item.imageUrl)
@@ -252,7 +341,12 @@ class DownloadFragment : Fragment() {
             }
 
             holder.itemBinding.progressBar.progress = progress
-            holder.itemBinding.progressBar.visibility = if (!isPaused && progress < 100) View.VISIBLE else View.GONE
+            holder.itemBinding.progressBar.visibility = when {
+                progress >= 100 -> View.GONE
+                isPaused -> View.GONE
+                else -> View.VISIBLE
+            }
+
 
             if (progress < 100) {
                 holder.itemBinding.textPause.visibility = View.VISIBLE
@@ -269,11 +363,17 @@ class DownloadFragment : Fragment() {
             }
         }
 
+
+
+
         fun updateProgress(position: Int, progress: Int) {
             progressMap[position] = progress
             if (progress > 0) pausedMap.remove(position)
             if (progress >= 100) pausedMap.remove(position)
-            activity?.runOnUiThread { notifyItemChanged(position) }
+
+            activity?.runOnUiThread {
+                notifyItemChanged(position)
+            }
         }
 
         fun setPaused(position: Int, paused: Boolean) {
