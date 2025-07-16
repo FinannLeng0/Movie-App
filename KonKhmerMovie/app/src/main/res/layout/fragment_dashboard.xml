@@ -14,7 +14,6 @@
         android:nestedScrollingEnabled="true"
         android:padding="8dp" />
 
-
     <TextView
         android:id="@+id/tvNoVideos"
         android:layout_width="match_parent"

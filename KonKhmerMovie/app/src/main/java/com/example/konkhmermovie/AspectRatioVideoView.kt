@@ -28,10 +28,10 @@ class AspectRatioVideoView @JvmOverloads constructor(
             val viewRatio = width.toFloat() / height.toFloat()
 
             if (viewRatio > aspectRatio) {
-                // width is too big, fix width according to height
+                // fix width according to height
                 width = (height * aspectRatio).toInt()
             } else {
-                // height is too big, fix height according to width
+                // fix height according to width
                 height = (width / aspectRatio).toInt()
             }
         }

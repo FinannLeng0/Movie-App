@@ -91,7 +91,6 @@ class DownloadFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 🔐 Redirect if not logged in
         if (FirebaseAuth.getInstance().currentUser == null) {
             Toast.makeText(requireContext(), "Please login to access downloads", Toast.LENGTH_SHORT).show()
             findNavController().navigate(R.id.action_downloadFragment_to_profileFragment)
@@ -99,7 +98,6 @@ class DownloadFragment : Fragment() {
         }
 
 
-        // 🔒 Storage permission for Android 9 and below
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(requireActivity(),
@@ -211,7 +209,6 @@ class DownloadFragment : Fragment() {
                 }
                 adapter.notifyDataSetChanged()
 
-                // ✅ Safe binding access
                 _binding?.let { binding ->
                     if (downloadList.isEmpty()) {
                         binding.textNoDownloads.visibility = View.VISIBLE
@@ -282,7 +279,7 @@ class DownloadFragment : Fragment() {
         try {
             connectivityManager?.unregisterNetworkCallback(networkCallback!!)
         } catch (e: Exception) {
-            // ignore if already unregistered
+
         }
     }
 
@@ -309,7 +306,7 @@ class DownloadFragment : Fragment() {
             val item = downloads[position]
             holder.itemBinding.textTitle.text = item.title
 
-            // Set your custom font here:
+            // Set custom font
             val typeface = ResourcesCompat.getFont(holder.itemView.context, R.font.movie)
             holder.itemBinding.textTitle.typeface = typeface
             holder.itemBinding.textProgress.typeface = typeface
@@ -364,9 +361,6 @@ class DownloadFragment : Fragment() {
                 pauseResumeClickListener(position, newPausedState)
             }
         }
-
-
-
 
         fun updateProgress(position: Int, progress: Int) {
             progressMap[position] = progress

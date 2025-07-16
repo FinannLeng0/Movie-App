@@ -14,7 +14,7 @@ class DownloadAdapter(
 ) : RecyclerView.Adapter<DownloadAdapter.DownloadViewHolder>() {
 
     private val progressMap = mutableMapOf<Int, Int>()
-    private val pausedMap = mutableMapOf<Int, Boolean>()  // track pause state per item
+    private val pausedMap = mutableMapOf<Int, Boolean>()
 
     inner class DownloadViewHolder(val itemBinding: ItemDownloadBinding) :
         RecyclerView.ViewHolder(itemBinding.root)
@@ -38,7 +38,6 @@ class DownloadAdapter(
         val progress = progressMap[position] ?: 0
         val isPaused = pausedMap[position] ?: false
 
-        // Set progress text
         holder.itemBinding.textProgress.text = when {
             progress in 1..99 && !isPaused -> "Downloading... $progress%"
             progress >= 100 -> "Download successful"
@@ -46,12 +45,10 @@ class DownloadAdapter(
             else -> "0%"
         }
 
-        // Progress bar visible only if downloading and progress in 1..99 and not paused
         holder.itemBinding.progressBar.visibility =
             if (progress in 1..99 && !isPaused) View.VISIBLE else View.GONE
         holder.itemBinding.progressBar.progress = progress
 
-        // Show pause/resume text if download is in progress or paused (progress < 100)
         if (progress < 100) {
             holder.itemBinding.textPause.visibility = View.VISIBLE
             holder.itemBinding.textPause.text = if (isPaused) "Resume" else "Pause"
@@ -69,7 +66,7 @@ class DownloadAdapter(
 
     fun updateProgress(position: Int, progress: Int) {
         progressMap[position] = progress
-        if (progress >= 100) pausedMap.remove(position)  // Clear paused state if complete
+        if (progress >= 100) pausedMap.remove(position)
         if (position in downloads.indices) {
             notifyItemChanged(position)
         }

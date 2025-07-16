@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="450dp"
@@ -22,7 +21,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <!-- Top fade overlay -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
@@ -30,7 +28,6 @@
                 android:elevation="10dp"
                 android:background="@drawable/gradient_top_fade" />
 
-            <!-- Bottom fade overlay -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
@@ -38,7 +35,6 @@
                 android:elevation="10dp"
                 android:background="@drawable/gradient_bottom_fade" />
 
-            <!-- Profile icon top-left -->
             <ImageView
                 android:id="@+id/profileIcon"
                 android:layout_width="40dp"
@@ -50,7 +46,6 @@
                 android:src="@drawable/pro"
                 android:elevation="30dp" />
 
-            <!-- Logo icon top-right -->
             <ImageView
                 android:id="@+id/logoIcon"
                 android:layout_width="90dp"
@@ -65,10 +60,6 @@
 
         </FrameLayout>
 
-
-
-
-        <!-- Category Title -->
         <TextView
             android:id="@+id/categoryTitle"
             android:layout_width="match_parent"
@@ -141,7 +132,6 @@
             </LinearLayout>
         </HorizontalScrollView>
 
-        <!-- Most Popular -->
         <TextView
             android:text="Most Popular"
             android:textStyle="bold"
@@ -160,7 +150,6 @@
             android:layout_marginLeft="5dp"
             android:layout_marginBottom="24dp" />
 
-        <!-- Khmer Movies -->
         <TextView
             android:text="Khmer Movies"
             android:textStyle="bold"
@@ -180,7 +169,6 @@
             android:layout_marginLeft="5dp"
             android:layout_marginBottom="24dp" />
 
-        <!-- Anime -->
         <TextView
             android:text="Anime"
             android:textStyle="bold"

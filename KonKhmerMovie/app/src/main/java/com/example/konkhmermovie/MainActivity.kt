@@ -14,11 +14,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // ✅ Inflate the layout first
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // ✅ Now you can safely access fadeOverlay
         val fadeOverlay = findViewById<View>(R.id.fadeOverlay)
         fadeOverlay.alpha = 1f
         fadeOverlay.visibility = View.VISIBLE
@@ -30,7 +28,6 @@ class MainActivity : AppCompatActivity() {
             }
             .start()
 
-        // Fullscreen immersive mode (optional)
         window.decorView.systemUiVisibility = (
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -40,7 +37,7 @@ class MainActivity : AppCompatActivity() {
                         or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 )
 
-        // Bottom navigation + navigation graph setup
+
         val navController = findNavController(R.id.nav_host_fragment)
         binding.bottomNavigation.setupWithNavController(navController)
 

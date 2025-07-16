@@ -8,7 +8,6 @@
     android:background="@color/black"
     tools:context=".favorite.FavoriteFragment">
 
-    <!-- Top title bar -->
     <TextView
         android:id="@+id/favoriteTitle"
         android:layout_width="wrap_content"
@@ -25,7 +24,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- RecyclerView for movie grid -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
@@ -43,7 +41,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/item_movie" />
 
-    <!-- No results message -->
     <TextView
         android:id="@+id/emptyMessage"
         android:layout_width="wrap_content"
@@ -57,8 +54,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- LOGIN PLACEHOLDER: shown only when user NOT logged in -->
-    <!-- Login placeholder layout (initially hidden) -->
+
     <LinearLayout
         android:id="@+id/loginPlaceholder"
         android:layout_width="match_parent"

@@ -4,19 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Fullscreen Video Background -->
+
     <com.example.konkhmermovie.home.ScaledVideoView
         android:id="@+id/videoBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Semi-transparent dark overlay -->
+
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#80000000" /> <!-- 50% black -->
+        android:background="#80000000" />
 
-    <!-- Scrollable Login Form -->
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -44,7 +44,7 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="32dp" />
 
-                <!-- Username -->
+
                 <EditText
                     android:id="@+id/etUsername"
                     android:layout_width="match_parent"
@@ -57,7 +57,7 @@
                     android:textColorHint="#CCCCCC"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Password -->
+
                 <EditText
                     android:id="@+id/etPassword"
                     android:layout_width="match_parent"
@@ -70,7 +70,7 @@
                     android:textColorHint="#CCCCCC"
                     android:layout_marginBottom="32dp" />
 
-                <!-- Login Button -->
+
                 <Button
                     android:id="@+id/btnLogin"
                     android:layout_width="match_parent"
@@ -82,7 +82,7 @@
                     android:elevation="6dp"
                     android:layout_marginBottom="32dp" />
 
-                <!-- Don't have account row -->
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -109,7 +109,6 @@
         </FrameLayout>
     </ScrollView>
 
-    <!-- Back Button shown on top -->
     <ImageButton
         android:id="@+id/btnBack"
         android:layout_width="40dp"

@@ -20,7 +20,6 @@
         android:paddingStart="8dp"
         android:gravity="center_vertical">
 
-        <!-- Title TextView -->
         <TextView
             android:id="@+id/titleTextView"
             android:layout_width="match_parent"

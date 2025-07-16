@@ -22,7 +22,6 @@ class FullscreenVideoActivity : AppCompatActivity() {
         binding = ActivityFullscreenVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Hide system UI for fullscreen immersive mode
         window.decorView.systemUiVisibility = (
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                         or View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -51,7 +50,6 @@ class FullscreenVideoActivity : AppCompatActivity() {
             player.seekTo(startPosition)
             player.playWhenReady = isPlaying
         } else {
-            // If already playing the same video, just seek and update play state
             player.seekTo(startPosition)
             player.playWhenReady = isPlaying
         }
@@ -69,7 +67,7 @@ class FullscreenVideoActivity : AppCompatActivity() {
             putExtra("isPlaying", player.isPlaying)
         }
         setResult(RESULT_OK, resultIntent)
-        binding.playerView.player = null // Detach player view before finishing
+        binding.playerView.player = null
         finish()
     }
 

@@ -1,6 +1,6 @@
 package com.example.konkhmermovie
 
-// NetworkUtils.kt
+
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network

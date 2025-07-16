@@ -93,7 +93,6 @@ class SearchFragment : Fragment() {
         })
     }
 
-
     private fun setupNetworkCallback() {
         connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
@@ -102,7 +101,6 @@ class SearchFragment : Fragment() {
                 activity?.runOnUiThread {
                     snackbar?.dismiss()
 
-                    // ✅ Show only once after disconnect
                     if (!hasShownConnectedOnce) {
                         hasShownConnectedOnce = true
 
@@ -119,7 +117,7 @@ class SearchFragment : Fragment() {
 
             override fun onLost(network: Network) {
                 activity?.runOnUiThread {
-                    hasShownConnectedOnce = false // ✅ Reset so next connect will show
+                    hasShownConnectedOnce = false
                     showNoInternetSnackbar()
                 }
             }
@@ -127,16 +125,13 @@ class SearchFragment : Fragment() {
 
         connectivityManager?.registerDefaultNetworkCallback(networkCallback!!)
 
-        // Initial check
         if (!isNetworkConnected()) {
             hasShownConnectedOnce = false
             showNoInternetSnackbar()
         } else {
-            hasShownConnectedOnce = true // Assume already connected at start
+            hasShownConnectedOnce = true
         }
     }
-
-
 
     private fun isNetworkConnected(): Boolean {
         val cm = connectivityManager ?: return false
@@ -156,11 +151,6 @@ class SearchFragment : Fragment() {
             .setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
         snackbar?.show()
     }
-
-
-
-
-
 
     private fun loadAllMovies() {
         allMovies.clear()
@@ -236,7 +226,7 @@ class SearchFragment : Fragment() {
         try {
             connectivityManager?.unregisterNetworkCallback(networkCallback!!)
         } catch (e: Exception) {
-            // Ignore if already unregistered
+
         }
     }
 }

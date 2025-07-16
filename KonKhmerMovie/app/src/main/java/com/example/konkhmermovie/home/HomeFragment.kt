@@ -79,7 +79,6 @@ class HomeFragment : Fragment() {
 
         setupNetworkCallback()
 
-        // Banners
         bannerAdapter = BannerAdapter()
         binding.bannerViewPager.adapter = bannerAdapter
         viewModel.banners.observe(viewLifecycleOwner) {
@@ -87,7 +86,6 @@ class HomeFragment : Fragment() {
             startAutoSlide()
         }
 
-        // Movie Adapters
         movieAdapterPopular = MovieAdapter { movie ->
             val action = HomeFragmentDirections.actionHomeFragmentToMovieDetailFragment(
                 movie.description.ifEmpty { "No Description" },
@@ -160,8 +158,6 @@ class HomeFragment : Fragment() {
                 }
                 button.isSelected = true
                 updateButtonStyle(button, true)
-
-                // TODO: Add category filter logic here
             }
         }
 

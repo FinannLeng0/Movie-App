@@ -7,7 +7,7 @@
     android:clipChildren="false"
     android:clipToPadding="false">
 
-    <!-- Play/Pause Button -->
+
     <ImageButton
         android:id="@+id/exo_play_pause"
         android:layout_width="64dp"
@@ -22,7 +22,6 @@
         app:tint="@android:color/white" />
 
 
-    <!-- SeekBar -->
     <SeekBar
         android:id="@+id/exo_progress_custom"
         android:layout_width="match_parent"
@@ -32,7 +31,7 @@
         android:progressDrawable="@drawable/seekbar_progress"
         android:thumb="@null" />
 
-    <!-- Time Labels -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

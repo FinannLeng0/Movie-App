@@ -101,7 +101,6 @@
             android:name="description"
             app:argType="string" />
 
-
         <argument
             android:name="title"
             app:argType="string" />
@@ -111,12 +110,10 @@
             app:argType="string" />
 
 
-
         <argument
             android:name="videoUrl"
             app:argType="string"
             android:defaultValue="" />
-
 
         <action
             android:id="@+id/action_movieDetailFragment_to_favoriteFragment"
@@ -126,11 +123,6 @@
             app:destination="@id/movieDetailFragment" />
 
     </fragment>
-
-
-
-
-
 
     <fragment
         android:id="@+id/favoriteFragment"

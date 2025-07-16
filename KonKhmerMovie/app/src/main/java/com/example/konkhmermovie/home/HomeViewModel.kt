@@ -7,10 +7,10 @@ import com.google.firebase.database.*
 
 class HomeViewModel : ViewModel() {
 
-    val animeMovies = MutableLiveData<List<Movie>>()  // list with 1 movie or empty list
+    val animeMovies = MutableLiveData<List<Movie>>()
     val banners = MutableLiveData<List<Banner>>()
     val khmerMovies = MutableLiveData<List<Movie>>()
-    val popularMovies = MutableLiveData<List<Movie>>()// for banners if you need
+    val popularMovies = MutableLiveData<List<Movie>>()
     val favoriteMovies = MutableLiveData<List<Movie>>()
 
     private val database = FirebaseDatabase.getInstance()
@@ -37,9 +37,8 @@ class HomeViewModel : ViewModel() {
                 targetLiveData.postValue(list)
             }
 
-
             override fun onCancelled(error: DatabaseError) {
-                // Handle error
+
             }
         })
     }

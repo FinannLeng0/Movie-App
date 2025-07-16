@@ -5,19 +5,19 @@
     android:layout_height="match_parent">
 
 
-    <!-- Scaled VideoView for centerCrop effect -->
+
     <com.example.konkhmermovie.home.ScaledVideoView
         android:id="@+id/videoBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Semi-transparent overlay to dim the video -->
+
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#80000000" /> <!-- 50% black -->
+        android:background="#80000000" />
 
-    <!-- Sign-up Form Centered -->
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -164,7 +164,6 @@
         </FrameLayout>
     </ScrollView>
 
-    <!-- Back Button -->
     <ImageButton
         android:id="@+id/btnBack"
         android:layout_width="40dp"

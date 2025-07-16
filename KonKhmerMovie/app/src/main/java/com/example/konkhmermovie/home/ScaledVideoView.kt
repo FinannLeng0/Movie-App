@@ -12,15 +12,12 @@ class ScaledVideoView @JvmOverloads constructor(
         val parentWidth = MeasureSpec.getSize(widthMeasureSpec)
         val parentHeight = MeasureSpec.getSize(heightMeasureSpec)
 
-        // Desired aspect ratio 9:16 (width:height)
         val desiredRatio = 9f / 16f
 
-        // Calculate height based on width and desired aspect ratio
         var width = parentWidth
         var height = (width / desiredRatio).toInt()
 
         if (height < parentHeight) {
-            // If calculated height less than parent height, fill height and crop width
             height = parentHeight
             width = (height * desiredRatio).toInt()
         }

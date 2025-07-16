@@ -34,9 +34,9 @@ class BannerAdapter : RecyclerView.Adapter<BannerAdapter.BannerViewHolder>() {
             Glide.with(binding.root.context)
                 .load(banner.imageUrl)
                 .centerCrop()
-                .placeholder(R.drawable.placeholder) // Optional placeholder image
+                .placeholder(R.drawable.placeholder)
                 .transition(com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade(500))
-                .into(binding.bannerImage) // this must match your XML ImageView ID
+                .into(binding.bannerImage)
         }
     }
 }

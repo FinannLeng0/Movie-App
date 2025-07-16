@@ -16,7 +16,6 @@ class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -28,7 +27,6 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Back button navigation with animation
         binding.backButton.setOnClickListener {
             val navOptions = NavOptions.Builder()
                 .setEnterAnim(R.anim.slide_in_left)
@@ -37,17 +35,15 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_profileFragment_to_homeFragment, null, navOptions)
         }
 
-        // Sign Up button navigation
         binding.btnSignUp.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_signUpFragment)
         }
 
-        // Setup VideoView background
         val videoUri = Uri.parse("android.resource://${requireContext().packageName}/${R.raw.v1}")
         binding.videoBackground.setVideoURI(videoUri)
         binding.videoBackground.setOnPreparedListener { mediaPlayer ->
             mediaPlayer.isLooping = true
-            mediaPlayer.setVolume(0f, 0f) // mute sound
+            mediaPlayer.setVolume(0f, 0f)
             binding.videoBackground.start()
         }
     }

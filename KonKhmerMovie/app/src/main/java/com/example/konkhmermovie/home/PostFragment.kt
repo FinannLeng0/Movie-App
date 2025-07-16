@@ -157,13 +157,12 @@ class PostFragment : Fragment() {
                         dbRef.child(videoId).setValue(videoData).addOnSuccessListener {
                             dismissUploadingDialog()
                             Toast.makeText(requireContext(), "Video uploaded successfully!", Toast.LENGTH_SHORT).show()
-                            // Use safe call for binding here:
+
                             _binding?.buttonUpload?.text = "Post Now"
                             _binding?.buttonUpload?.isEnabled = false
 
                             resetForm()
 
-                            // Delay with safe call
                             _binding?.buttonUpload?.postDelayed({
                                 _binding?.buttonUpload?.text = "Post Now"
                                 _binding?.buttonUpload?.isEnabled = true
@@ -257,8 +256,6 @@ class PostFragment : Fragment() {
             .setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
         snackbar?.show()
     }
-
-
 
     private fun showUploadingDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_uploading, null)

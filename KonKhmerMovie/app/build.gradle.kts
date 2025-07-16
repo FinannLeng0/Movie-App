@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("org.jetbrains.kotlin.kapt")  // Apply kapt plugin this way
+    id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.androidx.navigation.safe.args)
     alias(libs.plugins.google.gms.google.services)
 }
@@ -44,10 +44,9 @@ dependencies {
     // Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
-
     implementation ("com.google.android.material:material:1.11.0")
 
-    // Firebase (via BOM)
+    // Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-database-ktx")
@@ -56,7 +55,7 @@ dependencies {
     // Google Sign-In
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 
-    // Media3 ExoPlayer (latest only)
+    // Media3 ExoPlayer 
     implementation("androidx.media3:media3-exoplayer:1.3.1")
     implementation("androidx.media3:media3-ui:1.3.1")
 

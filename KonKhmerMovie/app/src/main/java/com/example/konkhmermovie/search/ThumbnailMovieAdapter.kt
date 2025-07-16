@@ -29,7 +29,7 @@ class ThumbnailMovieAdapter(
             Glide.with(binding.movieImage.context)
                 .load(movie.thumbnailUrl.ifEmpty { movie.imageUrl })
                 .placeholder(R.drawable.ic_placeholder)
-                .error(R.drawable.ic_placeholder) // fallback if load fails
+                .error(R.drawable.ic_placeholder)
                 .into(binding.movieImage)
 
             binding.root.setOnClickListener {

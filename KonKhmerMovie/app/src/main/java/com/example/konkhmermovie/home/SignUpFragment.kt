@@ -46,14 +46,12 @@ class SignUpFragment : Fragment() {
 
         auth = FirebaseAuth.getInstance()
 
-        // Google Sign-In configuration
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
         googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
 
-        // Sign Up with Email + Username
         binding.btnSignUp.setOnClickListener {
             val username = binding.etUsername.text.toString().trim()
             val email = binding.etEmail.text.toString().trim()
@@ -64,20 +62,19 @@ class SignUpFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            // Create Firebase user with email and password
+            // Create user with email and password
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val user = auth.currentUser
                         if (user != null) {
-                            // Update user's displayName to username
+                            // Update user
                             val profileUpdates = UserProfileChangeRequest.Builder()
                                 .setDisplayName(username)
                                 .build()
 
                             user.updateProfile(profileUpdates).addOnCompleteListener { updateTask ->
                                 if (updateTask.isSuccessful) {
-                                    // Save user info in Realtime Database
                                     val userInfo = mapOf(
                                         "uid" to user.uid,
                                         "username" to username,
@@ -108,7 +105,6 @@ class SignUpFragment : Fragment() {
                 }
         }
 
-        // Google Sign-In button
         binding.btnGoogle.setOnClickListener {
             auth.signOut()
             googleSignInClient.signOut().addOnCompleteListener {
@@ -116,7 +112,6 @@ class SignUpFragment : Fragment() {
             }
         }
 
-        // Back button to ProfileFragment
         binding.btnBack.setOnClickListener {
             val navOptions = NavOptions.Builder()
                 .setEnterAnim(R.anim.slide_in_left)
@@ -125,7 +120,6 @@ class SignUpFragment : Fragment() {
             findNavController().navigate(R.id.profileFragment, null, navOptions)
         }
 
-        // Already have account? Go to Login
         binding.tvLogin.setOnClickListener {
             findNavController().navigate(R.id.action_signUpFragment_to_loginFragment)
         }

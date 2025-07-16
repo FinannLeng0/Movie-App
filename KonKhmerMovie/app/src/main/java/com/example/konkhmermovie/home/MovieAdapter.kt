@@ -18,14 +18,12 @@ class MovieAdapter(
     private val movieList = mutableListOf<Movie>()
     private var onItemLongClickListener: ((Movie) -> Unit)? = null
 
-    // Submit new list of movies and refresh RecyclerView
     fun submitList(movies: List<Movie>) {
         movieList.clear()
         movieList.addAll(movies)
         notifyDataSetChanged()
     }
 
-    // Set long-click listener
     fun setOnItemLongClickListener(listener: (Movie) -> Unit) {
         onItemLongClickListener = listener
     }
@@ -50,7 +48,6 @@ class MovieAdapter(
         fun bind(movie: Movie) {
             binding.movieTitle.text = movie.title
 
-            // Load thumbnail if available, fallback to imageUrl
             val imageToLoad = if (movie.thumbnailUrl.isNotEmpty()) movie.thumbnailUrl else movie.imageUrl
 
             Glide.with(binding.root.context)
@@ -61,13 +58,11 @@ class MovieAdapter(
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(binding.movieImage)
 
-            // Initially hide overlay
             binding.titleOverlay.visibility = View.GONE
             binding.titleOverlay.alpha = 0f
 
             val overlay = binding.titleOverlay
 
-            // Show overlay on press, hide on release/cancel, and handle click
             val touchListener = View.OnTouchListener { _, event ->
                 when (event.actionMasked) {
                     MotionEvent.ACTION_DOWN -> {
@@ -94,16 +89,13 @@ class MovieAdapter(
                 }
             }
 
-            // Set touch listeners on both image and overlay for better UX
             binding.movieImage.setOnTouchListener(touchListener)
             overlay.setOnTouchListener(touchListener)
 
-            // Also trigger click on the whole item root in case user taps outside image
             binding.root.setOnClickListener {
                 onMovieClick?.invoke(movie)
             }
 
-            // Handle long click for additional action
             binding.root.setOnLongClickListener {
                 onItemLongClickListener?.invoke(movie)
                 true

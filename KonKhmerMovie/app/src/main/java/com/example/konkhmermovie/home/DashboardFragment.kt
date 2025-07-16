@@ -39,7 +39,7 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        applyCustomFontToAllText(binding.root) // ✅ Apply font to all TextViews inside this fragment
+        applyCustomFontToAllText(binding.root) // Apply font
 
         userMovieAdapter = UserMovieAdapter(requireContext(), movieList,
             onItemClick = { movie ->
@@ -131,7 +131,7 @@ class DashboardFragment : Fragment() {
         }
     }
 
-    // ✅ This will apply your custom font to all TextViews inside the fragment
+    // apply custom font
     private fun applyCustomFontToAllText(view: View) {
         val typeface = androidx.core.content.res.ResourcesCompat.getFont(requireContext(), R.font.movie)
         when (view) {

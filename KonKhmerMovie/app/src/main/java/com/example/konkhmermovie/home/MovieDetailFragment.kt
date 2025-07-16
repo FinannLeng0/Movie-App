@@ -38,14 +38,12 @@ import androidx.core.content.ContextCompat
 class MovieDetailFragment : Fragment() {
 
     companion object {
-        // Removed deprecated request code since we use ActivityResultLauncher now
+
     }
     private var connectivityManager: ConnectivityManager? = null
     private var networkCallback: ConnectivityManager.NetworkCallback? = null
     private var hasShownConnectedOnce = false
     private var snackbar: Snackbar? = null
-
-
 
     private val auth = FirebaseAuth.getInstance()
     private val uid get() = auth.currentUser?.uid
@@ -94,7 +92,6 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
-    // New ActivityResultLauncher to replace startActivityForResult
     private val fullscreenLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -103,7 +100,6 @@ class MovieDetailFragment : Fragment() {
             val position = data?.getLongExtra("position", 0L) ?: 0L
             val isPlaying = data?.getBooleanExtra("isPlaying", false) ?: false
 
-            // Only update UI if binding still exists
             if (_binding == null) return@registerForActivityResult
 
             playerView.player = player
@@ -234,7 +230,6 @@ class MovieDetailFragment : Fragment() {
 
         connectivityManager?.registerDefaultNetworkCallback(networkCallback!!)
 
-        // Initial check
         if (!isNetworkConnected()) {
             hasShownConnectedOnce = false
             showNoInternetSnackbar()
@@ -259,8 +254,6 @@ class MovieDetailFragment : Fragment() {
             .setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
         snackbar?.show()
     }
-
-
 
     private fun resolveAndInitialize(videoUrlOrFilename: String) {
         if (videoUrlOrFilename.startsWith("https://")) {
@@ -322,12 +315,11 @@ class MovieDetailFragment : Fragment() {
                 intent.putExtra("isPlaying", exo.isPlaying)
                 playerView.player = null
                 exo.pause()
-                fullscreenLauncher.launch(intent) // updated here
+                fullscreenLauncher.launch(intent)
             }
         }
     }
 
-    // Removed deprecated onActivityResult override
 
     private fun checkIfFavorite() {
         val userFavRef = favRef

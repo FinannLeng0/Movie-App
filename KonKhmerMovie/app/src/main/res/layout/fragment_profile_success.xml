@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/black">
 
-    <!-- Main content ScrollView -->
+
     <ScrollView
         android:id="@+id/scrollViewMain"
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- MaterialCardView header & profile -->
+
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
                                 android:textSize="14sp" />
                         </LinearLayout>
 
-                        <!-- Profile Icon -->
+
                         <ImageView
                             android:id="@+id/ivProfile"
                             android:layout_width="110dp"
@@ -108,7 +108,6 @@
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Tab layout: Contact Us / Dashboard -->
             <LinearLayout
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
@@ -118,7 +117,6 @@
                 android:paddingBottom="4dp"
                 android:background="@android:color/transparent">
 
-                <!-- Text options row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -151,14 +149,14 @@
                         android:padding="8dp" />
                 </LinearLayout>
 
-                <!-- Base gray line -->
+
                 <View
                     android:id="@+id/baseLine"
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:background="#444444" />
 
-                <!-- Red indicator line -->
+
                 <View
                     android:id="@+id/indicator"
                     android:layout_width="0dp"
@@ -167,7 +165,7 @@
                     android:background="@android:color/holo_red_dark" />
             </LinearLayout>
 
-            <!-- Contact details container -->
+
             <LinearLayout
                 android:id="@+id/contactContainer"
                 android:layout_width="match_parent"
@@ -176,7 +174,7 @@
                 android:padding="15dp"
                 android:visibility="gone">
 
-                <!-- Phone -->
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -200,7 +198,7 @@
                         android:layout_marginStart="12dp" />
                 </LinearLayout>
 
-                <!-- Facebook -->
+
                 <LinearLayout
                     android:id="@+id/facebookRow"
                     android:layout_width="match_parent"
@@ -226,7 +224,7 @@
                         android:layout_marginStart="12dp" />
                 </LinearLayout>
 
-                <!-- Telegram -->
+
                 <LinearLayout
                     android:id="@+id/rowTelegram"
                     android:layout_width="match_parent"
@@ -252,7 +250,7 @@
                         android:layout_marginStart="12dp" />
                 </LinearLayout>
 
-                <!-- TikTok -->
+
                 <LinearLayout
                     android:id="@+id/rowTikTok"
                     android:layout_width="match_parent"
@@ -278,7 +276,7 @@
                         android:layout_marginStart="12dp" />
                 </LinearLayout>
 
-                <!-- Address -->
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -321,7 +319,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Dashboard container OUTSIDE ScrollView -->
+
     <LinearLayout
         android:id="@+id/dashboardContainer"
         android:layout_width="match_parent"
@@ -345,7 +343,6 @@
     </LinearLayout>
 
 
-    <!-- Fixed Sign Out button at bottom -->
     <Button
         android:id="@+id/btnSignOut"
         android:layout_width="match_parent"

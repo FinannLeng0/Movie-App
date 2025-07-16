@@ -34,7 +34,6 @@ class LoginFragment : Fragment() {
 
         auth = FirebaseAuth.getInstance()
 
-        // Login Button
         binding.btnLogin.setOnClickListener {
             val username = binding.etUsername.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
@@ -73,7 +72,6 @@ class LoginFragment : Fragment() {
                 }
         }
 
-        // Sign Up Text
         binding.tvSignUp.setOnClickListener {
             val navOptions = NavOptions.Builder()
                 .setEnterAnim(R.anim.slide_in_left)
@@ -86,7 +84,6 @@ class LoginFragment : Fragment() {
             findNavController().navigate(R.id.signUpFragment, null, navOptions)
         }
 
-        // Back Button
         binding.btnBack.setOnClickListener {
             val navOptions = NavOptions.Builder()
                 .setEnterAnim(R.anim.slide_in_left)

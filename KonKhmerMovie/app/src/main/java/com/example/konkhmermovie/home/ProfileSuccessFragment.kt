@@ -57,7 +57,6 @@ class ProfileSuccessFragment : Fragment() {
     private var snackbar: Snackbar? = null
     private var hasShownConnectedOnce = false
 
-
     private lateinit var videoAdapter: UserMovieAdapter
     private val userVideos = mutableListOf<Movie>()
 
@@ -232,17 +231,14 @@ class ProfileSuccessFragment : Fragment() {
                 .create()
 
             dialog.setOnShowListener {
-                // Change button text color to white
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(android.graphics.Color.WHITE)
                 dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(android.graphics.Color.WHITE)
 
-                // Change message and title text color to white
                 val messageView = dialog.findViewById<TextView>(android.R.id.message)
                 messageView?.setTextColor(android.graphics.Color.WHITE)
                 val titleView = dialog.findViewById<TextView>(android.R.id.title)
                 titleView?.setTextColor(android.graphics.Color.WHITE)
 
-                // Set dark background color with rounded corners
                 dialog.window?.setBackgroundDrawable(
                     GradientDrawable().apply {
                         cornerRadius = 30f
@@ -339,7 +335,6 @@ class ProfileSuccessFragment : Fragment() {
         loadingDialog?.dismiss()
     }
 
-
     private fun loadUserVideos(uid: String) {
         val videosRef = FirebaseDatabase.getInstance().getReference("videos")
         videosRef.orderByChild("userId").equalTo(uid)
@@ -419,12 +414,6 @@ class ProfileSuccessFragment : Fragment() {
 
         dialog.show()
     }
-
-
-
-
-
-
 
     private fun showEditDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_edit_profile, null)

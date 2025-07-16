@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_dialog_gradient">
 
-    <!-- Your existing views like EditText, ImageView etc here -->
+
     <EditText
         android:id="@+id/etNewName"
         android:layout_width="match_parent"
@@ -30,7 +30,6 @@
         android:layout_marginTop="10dp"
         android:scaleType="centerCrop" />
 
-    <!-- Buttons container -->
     <LinearLayout
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"

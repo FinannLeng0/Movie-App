@@ -69,7 +69,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- No Results Layout (Image + Text) -->
     <LinearLayout
         android:id="@+id/noResultLayout"
         android:layout_width="wrap_content"
@@ -101,7 +100,6 @@
             android:layout_marginTop="8dp" />
     </LinearLayout>
 
-    <!-- Search Results RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchRecyclerView"
         android:layout_width="0dp"

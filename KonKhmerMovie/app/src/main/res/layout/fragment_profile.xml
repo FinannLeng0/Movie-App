@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Back button at top left -->
     <ImageButton
         android:id="@+id/backButton"
         android:layout_width="40dp"
@@ -20,19 +19,17 @@
         android:focusable="true"
         app:tint="@android:color/white" />
 
-    <!-- Video background filling the whole screen -->
     <com.example.konkhmermovie.home.ScaledVideoView
         android:id="@+id/videoBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Dark overlay to dim the video -->
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#80000000" /> <!-- 50% black overlay -->
+        android:background="#80000000" />
 
-    <!-- Overlay: ScrollView with content -->
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

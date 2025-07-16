@@ -35,7 +35,7 @@ class FavoriteFragment : Fragment() {
 
     private val favoriteKeysMap = mutableMapOf<String, String>()
 
-    // ✅ Network variables
+    // Network var
     private var connectivityManager: ConnectivityManager? = null
     private var networkCallback: ConnectivityManager.NetworkCallback? = null
     private var snackbar: Snackbar? = null
@@ -136,7 +136,7 @@ class FavoriteFragment : Fragment() {
         }
     }
 
-    // ✅ Setup network connection monitor
+    // Setup network
     private fun setupNetworkCallback() {
         connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
@@ -200,7 +200,7 @@ class FavoriteFragment : Fragment() {
         try {
             connectivityManager?.unregisterNetworkCallback(networkCallback!!)
         } catch (e: Exception) {
-            // Ignore if already unregistered
+
         }
     }
 }
